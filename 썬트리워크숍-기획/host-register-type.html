@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>숙소 유형 선택 – OPEN LETTER HOST</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --white: #ffffff;
+      --dark: #222222;
+      --mid: #717171;
+      --light: #b0b0b0;
+      --border: #dddddd;
+      --accent: #2563eb; /* 아고다 스타일 블루 포인트 */
+      --accent-hover: #1d4ed8;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HOST NAVBAR ──────────────────────────── */
+    .host-navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 80px;
+    }
+    .host-nav-logo {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dark);
+      text-decoration: none;
+      line-height: 1.2;
+    }
+    .host-nav-logo span {
+      display: block; font-weight: 300; letter-spacing: 0.15em; font-size: 14px;
+    }
+    .btn-exit {
+      background: #f7f7f7;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-exit:hover { background: #eaeaea; }
+
+    /* ─── MAIN CONTENT ─────────────────────────── */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 140px 24px 120px; /* 상단 헤더, 하단 바 공간 확보 */
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      letter-spacing: -0.02em;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* ─── PROPERTY TYPE CARDS ──────────────────── */
+    .type-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+    .type-card {
+      display: flex;
+      align-items: center;
+      padding: 24px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    
+    /* Hover 및 선택 효과 */
+    .type-card:hover {
+      border-color: var(--dark);
+      transform: scale(1.02); /* 살짝 커지는 효과 */
+    }
+    .type-card.selected {
+      border-color: var(--dark);
+      border-width: 2px;
+      background: #fdfdfd;
+      padding: 23.5px; /* 테두리 2px에 맞춰 패딩 미세 조정 */
+    }
+
+    .type-icon {
+      width: 40px;
+      height: 40px;
+      margin-right: 24px;
+      color: var(--dark);
+      flex-shrink: 0;
+    }
+    .type-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke-width: 1.5;
+    }
+
+    .type-text {
+      flex: 1;
+    }
+    .type-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--dark);
+    }
+    .type-desc {
+      font-size: 14.5px;
+      color: var(--mid);
+      line-height: 1.5;
+    }
+
+    /* ─── BOTTOM FIXED BAR ─────────────────────── */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 84px;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 100;
+    }
+    
+    /* 진행도 바 (선택사항) */
+    .progress-bar {
+      position: absolute;
+      top: -1px; left: 0; right: 0;
+      height: 2px;
+      background: var(--border);
+    }
+    .progress-fill {
+      width: 20%; /* 1단계 진행도 */
+      height: 100%;
+      background: var(--dark);
+    }
+
+    .btn-prev {
+      background: none; border: none;
+      font-size: 16px; font-weight: 600;
+      color: var(--dark); text-decoration: underline;
+      cursor: pointer; transition: color 0.15s;
+      padding: 10px;
+    }
+    .btn-prev:hover { color: #000; }
+    
+    .btn-next {
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-next:hover:not(:disabled) { background: var(--accent-hover); }
+    .btn-next:disabled { background: #dddddd; color: #ffffff; cursor: not-allowed; }
+
+    @media (max-width: 640px) {
+      .host-navbar { padding: 0 24px; height: 64px; }
+      .bottom-bar { padding: 0 24px; }
+      .main-content { padding-top: 100px; }
+      .page-title { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 헤더 -->
+  <header class="host-navbar">
+    <a class="host-nav-logo" href="host-dashboard.html">
+      OPEN LETTER
+      <span>HOST</span>
+    </a>
+    <button class="btn-exit" onclick="window.location.href='host-dashboard.html'">저장 및 나가기</button>
+  </header>
+
+  <!-- 메인 컨텐츠 -->
+  <main class="main-content">
+    <h1 class="page-title">어떤 종류의 숙소를 등록하시겠습니까?</h1>
+
+    <div class="type-list">
+      <!-- 주택형 숙소 -->
+      <div class="type-card" onclick="selectType(this, 'house')">
+        <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+        <div class="type-text">
+          <div class="type-title">주택형 숙소</div>
+          <div class="type-desc">아파트, 빌라, 게스트하우스, 단독주택 등</div>
+        </div>
+      </div>
+
+      <!-- 호텔형 숙소 -->
+      <div class="type-card" onclick="selectType(this, 'hotel')">
+        <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg></div>
+        <div class="type-text">
+          <div class="type-title">호텔형 숙소</div>
+          <div class="type-desc">호텔, 리조트, 호스텔, 서비스 아파트먼트 등</div>
+        </div>
+      </div>
+
+      <!-- 독특한 유형의 숙소 -->
+      <div class="type-card" onclick="selectType(this, 'unique')">
+        <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 20H5l7-11 7 11z"></path><path d="M12 15v5"></path><path d="M12 4v2"></path><path d="M8 6l2 2"></path><path d="M16 6l-2 2"></path></svg></div>
+        <div class="type-text">
+          <div class="type-title">독특한 유형의 숙소</div>
+          <div class="type-desc">카라반, 하우스보트, 팜 스테이, 글램핑, 한옥 등</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 하단 고정 바 -->
+  <footer class="bottom-bar">
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <button class="btn-prev" onclick="history.back()">뒤로</button>
+    <button class="btn-next" id="nextBtn" disabled onclick="window.location.href='host-register-concept.html'">다음</button>
+  </footer>
+
+  <script>
+    function selectType(element, typeValue) {
+      // 모든 카드에서 selected 클래스 제거
+      document.querySelectorAll('.type-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+      // 클릭한 카드에 selected 클래스 추가
+      element.classList.add('selected');
+      // 다음 버튼 활성화
+      document.getElementById('nextBtn').disabled = false;
+      
+      // TODO: 선택한 typeValue를 저장하는 로직 추가 가능
+    }
+  </script>
+</body>
+</html>

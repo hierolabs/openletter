@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>숙소 등록 방식 선택 – OPEN LETTER HOST</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f8f9fa;
+      --white: #ffffff;
+      --dark: #1a1a1a;
+      --mid: #555;
+      --light: #888;
+      --border: #e0dbd3;
+      --accent: #2563eb; /* 아고다 스타일 블루 포인트 */
+      --accent-hover: #1d4ed8;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HOST NAVBAR ──────────────────────────── */
+    .host-navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      height: 64px;
+      border-bottom: 1px solid var(--border);
+    }
+    .host-nav-logo {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dark);
+      text-decoration: none;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .host-nav-logo span {
+      display: block; font-weight: 300; letter-spacing: 0.15em; font-size: 14px;
+    }
+    .back-btn {
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--dark); padding: 8px; border-radius: 50%;
+      transition: background 0.15s;
+      margin-right: 8px;
+    }
+    .back-btn:hover { background: #f0f0f0; }
+
+    /* ─── MAIN CONTENT ─────────────────────────── */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 24px 60px;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+      text-align: center;
+    }
+    .page-sub {
+      font-size: 15px;
+      color: var(--mid);
+      margin-bottom: 48px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* ─── METHOD CARDS ─────────────────────────── */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      width: 100%;
+    }
+    .method-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .method-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.1);
+    }
+    .method-icon {
+      width: 64px; height: 64px;
+      background: #f0f4ff;
+      color: var(--accent);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+    }
+    .method-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--dark);
+    }
+    .method-desc {
+      font-size: 14px;
+      color: var(--light);
+      line-height: 1.6;
+    }
+
+    /* ─── MODAL (AIRBNB IMPORT) ────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+      padding: 20px;
+    }
+    .modal-overlay.open {
+      opacity: 1; pointer-events: auto;
+    }
+    .import-modal {
+      background: var(--white);
+      border-radius: 16px;
+      width: 100%; max-width: 480px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+      transform: translateY(12px);
+      transition: transform 0.2s;
+      overflow: hidden;
+    }
+    .modal-overlay.open .import-modal { transform: translateY(0); }
+    
+    .modal-header {
+      padding: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header h3 { font-size: 18px; font-weight: 700; }
+    .modal-close {
+      background: none; border: none; cursor: pointer; color: var(--light);
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.15s;
+    }
+    .modal-close:hover { color: var(--dark); }
+    
+    .modal-body { padding: 32px 24px; }
+    .input-label {
+      display: block; font-size: 13px; font-weight: 600; color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .url-input {
+      width: 100%; padding: 14px 16px;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-size: 15px; font-family: inherit;
+      outline: none; transition: border-color 0.15s;
+    }
+    .url-input:focus { border-color: var(--accent); }
+    .modal-desc {
+      font-size: 13px; color: var(--light); margin-top: 12px; line-height: 1.5;
+    }
+
+    .modal-footer {
+      padding: 16px 24px 24px;
+      display: flex; justify-content: flex-end; gap: 12px;
+    }
+    .btn-cancel {
+      padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--white); color: var(--dark); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-cancel:hover { background: #f5f5f5; }
+    .btn-submit {
+      padding: 12px 24px; border-radius: 8px; border: none;
+      background: var(--accent); color: var(--white); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-submit:hover { background: var(--accent-hover); }
+
+    @media (max-width: 640px) {
+      .method-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 헤더 -->
+  <header class="host-navbar">
+    <button class="back-btn" onclick="window.location.href='host-dashboard.html'" title="뒤로가기">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <a class="host-nav-logo" href="host-dashboard.html">
+      OPEN LETTER
+      <span>HOST</span>
+    </a>
+  </header>
+
+  <!-- 메인 컨텐츠 -->
+  <main class="main-content">
+    <h1 class="page-title">어떤 방식으로 숙소를 등록하시겠어요?</h1>
+    <p class="page-sub">이미 운영 중인 숙소가 있다면 링크 하나로 빠르게 불러올 수 있습니다.<br>처음 등록하신다면 수동 등록을 선택해 주세요.</p>
+
+    <div class="method-grid">
+      <!-- 에어비앤비 불러오기 -->
+      <div class="method-card" onclick="openImportModal()">
+        <div class="method-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+        </div>
+        <h2 class="method-title">에어비앤비 불러오기</h2>
+        <p class="method-desc">기존에 운영 중인 에어비앤비 링크를 입력하면<br>숙소 설명과 사진이 자동으로 채워집니다.</p>
+      </div>
+
+      <!-- 수동 등록 -->
+      <div class="method-card" onclick="window.location.href='host-register-type.html'">
+        <div class="method-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+        </div>
+        <h2 class="method-title">수동 등록하기</h2>
+        <p class="method-desc">사진, 편의시설, 요금 등 숙소 정보를<br>처음부터 꼼꼼하게 직접 입력합니다.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- 에어비앤비 링크 입력 모달 -->
+  <div class="modal-overlay" id="importModal" onclick="if(event.target===this) closeImportModal()">
+    <div class="import-modal">
+      <div class="modal-header">
+        <h3>에어비앤비 링크 입력</h3>
+        <button class="modal-close" onclick="closeImportModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label class="input-label" for="airbnbUrl">숙소 주소 (URL)</label>
+        <input type="text" id="airbnbUrl" class="url-input" placeholder="https://www.airbnb.co.kr/rooms/..." autocomplete="off">
+        <p class="modal-desc">주소를 입력하시면 기본적인 정보와 사진을 안전하게 불러와 등록 과정을 단축시켜 드립니다.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeImportModal()">취소</button>
+        <button class="btn-submit" onclick="alert('불러오기 기능은 준비 중입니다. 숙소 유형 선택 페이지로 이동합니다.'); window.location.href='host-register-type.html';">정보 불러오기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openImportModal() {
+      document.getElementById('importModal').classList.add('open');
+      setTimeout(() => document.getElementById('airbnbUrl').focus(), 200);
+    }
+    function closeImportModal() {
+      document.getElementById('importModal').classList.remove('open');
+      document.getElementById('airbnbUrl').value = '';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>호스트 대시보드 – OPEN LETTER HOUSE</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --white: #ffffff;
+      --dark: #1a1a1a;
+      --mid: #555;
+      --light: #888;
+      --border: #e0dbd3;
+      --accent: #1a1a1a;
+      --host-bg: #f7f5f2;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: var(--host-bg);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HOST NAVBAR ──────────────────────────── */
+    .host-navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      border-bottom: 1px solid var(--border);
+    }
+    .host-nav-logo {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dark);
+      text-decoration: none;
+      line-height: 1.2;
+    }
+    .host-nav-logo span {
+      display: block; font-weight: 300; letter-spacing: 0.15em; font-size: 14px;
+    }
+    .host-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .guest-mode-btn {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--dark);
+      border: none;
+      border-radius: 20px;
+      padding: 6px 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .guest-mode-btn:hover { background: #333; }
+
+    /* ─── LAYOUT ───────────────────────────────── */
+    .dashboard-wrap {
+      display: flex;
+      flex: 1;
+      padding-top: 64px; /* navbar height */
+    }
+
+    /* ─── SIDEBAR ──────────────────────────────── */
+    .sidebar {
+      width: 240px;
+      background: transparent;
+      border-right: none;
+      position: fixed;
+      top: 64px;
+      bottom: 0;
+      left: 0;
+      padding: 24px 0;
+      overflow-y: auto;
+    }
+    .menu-list { list-style: none; }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--mid);
+      text-decoration: none;
+      transition: all 0.15s;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+    }
+    .menu-item:hover {
+      background: transparent;
+      color: var(--dark);
+    }
+    .menu-item.active {
+      color: var(--dark);
+      background: transparent;
+      border-left-color: var(--accent);
+      font-weight: 700;
+    }
+    .menu-item svg { flex-shrink: 0; }
+
+    /* ─── MAIN CONTENT ─────────────────────────── */
+    .main-content {
+      margin-left: 240px;
+      flex: 1;
+      padding: 40px 48px;
+      max-width: 1200px;
+    }
+    .page-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.04em;
+    }
+    .page-sub {
+      font-size: 14px;
+      color: var(--light);
+      margin-bottom: 32px;
+    }
+
+    /* ─── STATS GRID ───────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #eae6df;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--mid);
+      font-weight: 500;
+    }
+    .stat-val {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .stat-diff {
+      font-size: 12px;
+      color: #059669;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ─── CTA BANNER (숙소 등록) ───────────────── */
+    .cta-banner {
+      background: var(--dark);
+      border-radius: 16px;
+      padding: 36px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--white);
+      margin-bottom: 48px;
+    }
+    .cta-text h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .cta-text p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.5;
+    }
+    .cta-btn {
+      background: var(--white);
+      color: var(--dark);
+      border: none;
+      border-radius: 8px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    /* ─── MY STAYS SECTION ─────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .view-all {
+      font-size: 13px;
+      color: var(--mid);
+      text-decoration: none;
+    }
+    .view-all:hover { color: var(--dark); text-decoration: underline; }
+
+    .stay-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .stay-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .stay-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+    }
+    .stay-img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: #e8e4df;
+      position: relative;
+    }
+    .stay-status {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: rgba(255,255,255,0.9);
+      color: #059669;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      backdrop-filter: blur(4px);
+    }
+    .stay-body {
+      padding: 16px;
+    }
+    .stay-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .stay-meta {
+      font-size: 12px;
+      color: var(--light);
+      margin-bottom: 16px;
+    }
+    .manage-btn {
+      width: 100%;
+      padding: 10px;
+      background: var(--host-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .manage-btn:hover { background: #eee; }
+  </style>
+</head>
+<body>
+
+  <!-- 상단바 -->
+  <header class="host-navbar">
+    <a class="host-nav-logo" href="host-dashboard.html">
+      OPEN LETTER
+      <span>HOST</span>
+    </a>
+    <div class="host-nav-right">
+      <button class="guest-mode-btn" onclick="window.location.href='mypage.html'">
+        게스트 모드
+      </button>
+    </div>
+  </header>
+
+  <div class="dashboard-wrap">
+    <!-- 사이드바 메뉴 -->
+    <aside class="sidebar">
+      <ul class="menu-list">
+        <li><a href="#" class="menu-item active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          대시보드
+        </a></li>
+        <li><a href="#" class="menu-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          예약 관리
+        </a></li>
+        <li><a href="#" class="menu-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          내 숙소 관리
+        </a></li>
+        <li><a href="select-method.html" class="menu-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+          숙소 등록하기
+        </a></li>
+        <li><a href="#" class="menu-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          통계 요약
+        </a></li>
+      </ul>
+    </aside>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content">
+      <h1 class="page-title">예린님, 환영합니다.</h1>
+      <p class="page-sub">오늘 호스트님의 숙소 현황을 확인해보세요.</p>
+
+      <!-- 통계 요약 -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <div class="stat-label">오늘 예약 건수</div>
+          <div class="stat-val">2건</div>
+          <div class="stat-diff"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg> 전일 대비 1건 증가</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          </div>
+          <div class="stat-label">이번 달 예상 수익</div>
+          <div class="stat-val">₩3,450,000</div>
+          <div class="stat-diff"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg> 전월 대비 12% 증가</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          </div>
+          <div class="stat-label">답변 대기 메시지</div>
+          <div class="stat-val">1건</div>
+          <div class="stat-diff" style="color:var(--mid);">신규 문의가 있습니다.</div>
+        </div>
+      </div>
+
+      <!-- 메인 버튼 (숙소 등록) -->
+      <div class="cta-banner">
+        <div class="cta-text">
+          <h3>호스트님의 특별한 공간을 들려주세요</h3>
+          <p>새로운 숙소를 등록하고 더 많은 게스트와 이야기를 나누어보세요.</p>
+        </div>
+        <button class="cta-btn" onclick="window.location.href='select-method.html'">
+          새로운 숙소 등록하기
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- 내 숙소 목록 -->
+      <div class="section-header">
+        <h2 class="section-title">내 숙소 목록</h2>
+        <a href="#" class="view-all">전체보기</a>
+      </div>
+      <div class="stay-grid">
+        <!-- 숙소 1 -->
+        <div class="stay-card">
+          <div class="stay-img" style="background: linear-gradient(135deg, #1e2e48 0%, #3a5472 100%);">
+            <span class="stay-status">운영 중</span>
+          </div>
+          <div class="stay-body">
+            <div class="stay-name">오픈레터하우스</div>
+            <div class="stay-meta">서울, 신당동 · 단독채</div>
+            <button class="manage-btn">숙소 관리</button>
+          </div>
+        </div>
+        <!-- 숙소 2 -->
+        <div class="stay-card">
+          <div class="stay-img" style="background: linear-gradient(135deg, #80a880 0%, #507850 100%);">
+            <span class="stay-status" style="color:var(--mid); background:#f5f5f5;">준비 중</span>
+          </div>
+          <div class="stay-body">
+            <div class="stay-name">숲속의 아틀리에</div>
+            <div class="stay-meta">강원, 홍천 · 독채 펜션</div>
+            <button class="manage-btn">등록 이어서 하기</button>
+          </div>
+        </div>
+        <!-- 숙소 3 (신규) -->
+        <div class="stay-card">
+          <div class="stay-img" style="background: linear-gradient(135deg, #d4cfc8 0%, #a09080 100%);">
+            <span class="stay-status" style="color:#d97706; background:#fef3c7;">심사 중</span>
+          </div>
+          <div class="stay-body">
+            <div class="stay-name">나만의 특별한 아틀리에</div>
+            <div class="stay-meta">서울, 중구 · 주택형 숙소</div>
+            <button class="manage-btn">숙소 관리</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

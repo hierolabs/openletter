@@ -1,0 +1,42 @@
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 40px 80px;
+}
+
+.header { margin-bottom: 32px; }
+.title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+.searchInfo {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.searchInfo span {
+  font-size: 13px;
+  color: var(--mid);
+  background: #f5f5f5;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.count { font-size: 14px; color: var(--light); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.empty {
+  text-align: center;
+  padding: 80px 0;
+  color: var(--light);
+  font-size: 16px;
+  line-height: 2;
+}
+
+@media (max-width: 900px) {
+  .page { padding: 24px 20px 60px; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .grid { grid-template-columns: 1fr; }
+}

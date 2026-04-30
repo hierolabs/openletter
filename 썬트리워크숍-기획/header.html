@@ -1,0 +1,29 @@
+<nav class="navbar">
+  <a class="nav-logo" href="index.html">
+    OPEN LETTER
+    <span>HOUSE</span>
+  </a>
+  <div class="nav-right">
+    <div class="search-box" onclick="openModal()" style="cursor:pointer">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      어디로 떠날까요?
+    </div>
+      <button class="nav-host-btn" onclick="window.location.href='host-dashboard.html'">호스트 센터</button>
+    <button class="login-btn" id="login-btn">로그인</button>
+    <button class="nav-icon-btn" title="언어">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<div class="category-bar">
+  <div class="cat-item active" onclick="setCategory(this); openModal()">FIND STAY</div>
+  <div class="cat-item" onclick="setCategory(this)">BRAND STORY</div>
+  <div class="cat-item" onclick="setCategory(this)">JOURNAL</div>
+  <div class="cat-item" onclick="setCategory(this)">CONTACT</div>
+</div>

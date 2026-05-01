@@ -5,6 +5,7 @@ import { StaysPage } from '../pages/Stays';
 import { StayDetailPage } from '../pages/StayDetail';
 import { BrandStoryPage } from '../pages/BrandStory';
 import { MyPage } from '../pages/MyPage';
+import { NeighborhoodPage } from '../pages/Neighborhood';
 import { HostDashboard } from '../pages/Host/Dashboard';
 import { SelectMethod } from '../pages/Host/Register/SelectMethod';
 import { RegisterLayout } from '../pages/Host/Register/RegisterLayout';
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
       { path: '/stays/:id', element: <StayDetailPage /> },
       { path: '/brand-story', element: <BrandStoryPage /> },
       { path: '/mypage', element: <MyPage /> },
+      { path: '/neighborhood', element: <NeighborhoodPage /> },
     ],
   },
   {

@@ -12,9 +12,11 @@ const BADGE_CLS: Record<string, string> = {
 interface Props {
   stay: Stay | (Omit<Stay, 'id' | 'images'> & { _color: string; id?: number });
   colorClass?: string;
+  onHoverStart?: () => void;
+  onHoverEnd?: () => void;
 }
 
-export function StayCard({ stay, colorClass }: Props) {
+export function StayCard({ stay, colorClass, onHoverStart, onHoverEnd }: Props) {
   const [bookmarked, setBookmarked] = useState(false);
   const navigate = useNavigate();
   const cls = colorClass || stay._color || '';
@@ -27,7 +29,7 @@ export function StayCard({ stay, colorClass }: Props) {
   }
 
   return (
-    <div className={styles.card} onClick={handleClick}>
+    <div className={styles.card} onClick={handleClick} onMouseEnter={onHoverStart} onMouseLeave={onHoverEnd}>
       <div className={`${styles.imgWrap} ${cls}`}>
         {images?.[0] ? (
           <img src={images[0]} alt={stay.name} />

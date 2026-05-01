@@ -25,16 +25,30 @@ export const STAYS: Stay[] = [
     description: '자연과 함께하는 친환경 공간',
     images: ['/images/stays/chorok-jae/main.svg'],
   },
+  {
+    id: 3,
+    name: '천호재',
+    region: '서울',
+    district: '강동구',
+    categories: ['로컬 스테이'],
+    capacity: '2~4명',
+    price: 120000,
+    badges: ['신규'],
+    description: '카페 골목에 숨어있는 조용한 공간',
+    images: [],
+  },
 ];
 
 export const CONCEPT_PLACEHOLDERS: Record<string, Array<Omit<Stay, 'id' | 'images'> & { _color: string }>> = {
   '아트 스테이': [
     { name: '파란 아틀리에', region: '경기', district: '파주시', categories: ['아트 스테이'], capacity: '2~4명', price: 180000, badges: [], description: '', _color: 'cp-3' },
     { name: '갤러리하우스', region: '부산', district: '수영구', categories: ['아트 스테이'], capacity: '2~4명', price: 160000, badges: [], description: '', _color: 'cp-5' },
+    { name: '모노스튜디오', region: '제주', district: '애월읍', categories: ['아트 스테이'], capacity: '1~2명', price: 170000, badges: [], description: '', _color: 'cp-1' },
   ],
   '친환경': [
     { name: '숲속의 집', region: '강원', district: '홍천군', categories: ['친환경'], capacity: '2~6명', price: 140000, badges: [], description: '', _color: 'cp-2' },
     { name: '흙집스테이', region: '전남', district: '순천시', categories: ['친환경'], capacity: '2~4명', price: 120000, badges: [], description: '', _color: 'cp-4' },
+    { name: '솔숲재', region: '경북', district: '영양군', categories: ['친환경'], capacity: '2~4명', price: 125000, badges: [], description: '', _color: 'cp-6' },
   ],
   '로컬 스테이': [
     { name: '서촌골방', region: '서울', district: '종로구', categories: ['로컬 스테이'], capacity: '1~2명', price: 110000, badges: [], description: '', _color: 'cp-1' },
@@ -94,6 +108,31 @@ export const STAY_DETAILS: Record<number, StayDetail> = {
       { name: '정*희', date: '2025. 2. 20.', score: 4.7, text: '친환경 소재로 된 인테리어가 정말 편안했어요.' },
     ],
   },
+  3: {
+    id: 3,
+    name: '천호재',
+    location: '서울, 강동구',
+    colorClass: 'cp-b3',
+    badges: ['신규'],
+    reviews: { score: 4.7, count: 5 },
+    originalPrice: null,
+    discount: null,
+    finalPrice: 120000,
+    coupon: null,
+    promo: null,
+    introImage: undefined,
+    room: { name: '마루방', type: '기본형', minGuests: 2, maxGuests: 4 },
+    description: `카페 골목 사이에 자리한 로컬 스테이, 천호재입니다. 강동구 천호대로를 따라 메가커피, 스타벅스, 이디야 등 다양한 카페들이 도보권에 있어 커피 산책을 즐기기에 최적입니다.\n\n낡은 빌라를 리모델링한 공간으로, 낮은 층고와 나무 마감이 주는 아늑함 속에 긴 여유를 즐길 수 있습니다.`,
+    address: '서울특별시 강동구 천호대로 1156-5',
+    locationDesc: '천호역 2번 출구에서 도보 7분 거리에 위치합니다.',
+    checkin: '15:00',
+    checkout: '11:00',
+    rules: ['반려동물 협의 가능', '흡연 금지', '22:00 이후 소음 주의', '취사 가능'],
+    sampleReviews: [
+      { name: '한*수', date: '2025. 4. 10.', score: 4.8, text: '천호역에서 가깝고 주변 카페가 많아 너무 좋았어요!' },
+      { name: '오*진', date: '2025. 4. 02.', score: 4.6, text: '조용하고 아늑한 공간. 커피 루트 다 돌아봤어요.' },
+    ],
+  },
 };
 
 export const AC_DATA = [
@@ -117,7 +156,53 @@ export const AC_DATA = [
   { type: 'region', name: '충청' },
   { type: 'stay', name: '오픈레터하우스' },
   { type: 'stay', name: '초록재' },
+  { type: 'stay', name: '천호재' },
 ];
 
 export const DOMESTIC_REGIONS = ['전체', '서울', '제주', '강원', '강릉', '춘천', '양양', '부산', '경상', '경주', '전라', '전주', '남원', '경기', '양평', '가평', '인천', '충청'];
 export const OVERSEAS_REGIONS = ['전체', '일본', '태국', '베트남', '발리', '유럽'];
+
+// 숙소별 위경도 (네이버 지도 마커용)
+export const STAY_LATLNG: Record<string, { lat: number; lng: number }> = {
+  '오픈레터하우스': { lat: 37.5592, lng: 127.0097 }, // 서울 신당동
+  '초록재':         { lat: 37.5499, lng: 127.1478 }, // 서울 강동구
+  '천호재':         { lat: 37.5384, lng: 127.1240 }, // 서울 강동구 천호대로 1156-5
+  '파란 아틀리에':  { lat: 37.7572, lng: 126.7821 }, // 경기 파주시
+  '갤러리하우스':   { lat: 35.1672, lng: 129.1132 }, // 부산 수영구
+  '숲속의 집':      { lat: 37.6978, lng: 127.8894 }, // 강원 홍천군
+  '흙집스테이':     { lat: 34.9501, lng: 127.4871 }, // 전남 순천시
+  '서촌골방':       { lat: 37.5832, lng: 126.9704 }, // 서울 종로구 서촌
+  '부산골목집':     { lat: 35.1097, lng: 129.0325 }, // 부산 초량동
+  '전주한옥':       { lat: 35.8177, lng: 127.1536 }, // 전북 전주시
+};
+
+export interface RoutePOI {
+  lat: number;
+  lng: number;
+  name: string;
+  walkMinutes: number;
+  description?: string;
+}
+
+// 커피향 루트 카페 핀 (강동구 천호 일대 실제 카페)
+export const COFFEE_ROUTE_POIS: RoutePOI[] = [
+  { lat: 37.5382, lng: 127.1258, name: '메가커피 천호역점', walkMinutes: 3, description: '24시간 운영 · 넓은 좌석' },
+  { lat: 37.5376, lng: 127.1275, name: '스타벅스 천호점', walkMinutes: 7, description: '천호대로 창가 뷰 · 리저브 메뉴' },
+  { lat: 37.5369, lng: 127.1284, name: '어라운드커피', walkMinutes: 10, description: '독립카페 · 원두 직접 로스팅' },
+  { lat: 37.5361, lng: 127.1271, name: '투썸플레이스 강동점', walkMinutes: 13, description: '케이크 종류 다양 · 조용한 분위기' },
+  { lat: 37.5371, lng: 127.1248, name: '빈티지로스터스', walkMinutes: 5, description: '독립카페 · 브런치 메뉴 있음' },
+];
+
+// 숙소별 커피향 루트 절대좌표 (실제 주변 카페 기반)
+export const STAY_COFFEE_ROUTES: Record<string, { lat: number; lng: number }[]> = {
+  '천호재': [
+    { lat: 37.5384, lng: 127.1240 }, // 천호재 출발
+    { lat: 37.5383, lng: 127.1258 }, // 메가커피 천호역점
+    { lat: 37.5377, lng: 127.1274 }, // 스타벅스 천호점
+    { lat: 37.5369, lng: 127.1283 }, // 이디야커피 강동점
+    { lat: 37.5358, lng: 127.1271 }, // 투썸플레이스 강동
+    { lat: 37.5362, lng: 127.1252 }, // 컴포즈커피 천호
+    { lat: 37.5371, lng: 127.1238 }, // 빽다방 천호역
+    { lat: 37.5384, lng: 127.1240 }, // 천호재 귀환
+  ],
+};

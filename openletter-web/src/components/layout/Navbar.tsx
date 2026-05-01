@@ -29,30 +29,23 @@ export function Navbar() {
       </Link>
 
       <div className={styles.navRight}>
-        <div className={styles.searchBox} onClick={open}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          어디로 떠날까요?
-        </div>
-
         <button className={styles.hostBtn} onClick={() => navigate('/host')}>호스트 센터</button>
-
-        {!user && (
-          <button className={styles.loginBtn} onClick={signInWithGoogle}>로그인</button>
-        )}
 
         <div className={styles.userMenuWrap} ref={dropdownRef}>
           <button
-            className={styles.iconBtn}
+            className={styles.menuToggle}
             onClick={e => { e.stopPropagation(); setDropdownOpen(p => !p); }}
-            title="내 계정"
           >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="3" y1="7" x2="21" y2="7" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="17" x2="21" y2="17" />
+            </svg>
             {user?.photoURL ? (
-              <img src={user.photoURL} alt="" style={{ width: 24, height: 24, borderRadius: '50%' }} />
+              <img src={user.photoURL} alt="" className={styles.avatar} />
             ) : (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="#717171" stroke="none">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
               </svg>
             )}
           </button>
@@ -82,13 +75,6 @@ export function Navbar() {
             </div>
           )}
         </div>
-
-        <button className={styles.iconBtn} title="언어">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" />
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-          </svg>
-        </button>
       </div>
     </nav>
   );

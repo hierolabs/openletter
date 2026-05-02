@@ -35,21 +35,42 @@ git clone https://github.com/hierolabs/openletter.git
 cd openletter
 
 # frontend
-cd frontend && npm install && cd ..
+cd frontend && npm install && cp .env.example .env && cd ..
 
 # admin
-cd admin && npm install && cd ..
+cd admin && npm install && cp .env.example .env && cd ..
 
 # backend
 cd backend && go mod tidy && cp .env.example .env && cd ..
 # → backend/.env의 DATABASE_DSN을 본인 환경에 맞게 수정
 ```
 
-`backend/.env` 형식:
+각 `.env` 형식:
 
 ```env
+# backend/.env
 PORT=8080
 DATABASE_DSN=user:password@tcp(127.0.0.1:3306)/openletter?charset=utf8mb4&parseTime=True&loc=Local
+
+# frontend/.env
+VITE_API_URL=http://localhost:8080
+
+# admin/.env
+VITE_API_URL=http://localhost:8080/admin
+```
+
+## API 라우팅 구조
+
+| 클라이언트 | 호출 베이스 URL | Backend 라우트 그룹 |
+|---|---|---|
+| frontend | `http://localhost:8080` | `/` (공개 라우트) |
+| admin | `http://localhost:8080/admin` | `/admin` 그룹 (admin 전용) |
+
+각 앱은 `src/lib/api.ts`의 `api()` 헬퍼를 통해 호출합니다:
+
+```ts
+import { api } from "./lib/api";
+const data = await api<{ status: string }>("/health");
 ```
 
 ## 실행 (전체 한 번에)

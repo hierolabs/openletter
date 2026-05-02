@@ -1,19 +1,34 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net/http"
+	"os"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+
+	"github.com/hierolabs/openletter/backend/internal/db"
+	"github.com/hierolabs/openletter/backend/internal/handler"
 )
 
 func main() {
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "ok")
-	})
+	_ = godotenv.Load()
 
-	addr := ":8080"
+	gormDB, err := db.Open()
+	if err != nil {
+		log.Fatalf("db: %v", err)
+	}
+
+	r := gin.Default()
+	r.GET("/health", handler.Health(gormDB))
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	addr := ":" + port
 	log.Printf("openletter backend listening on %s", addr)
-	if err := http.ListenAndServe(addr, nil); err != nil {
+	if err := r.Run(addr); err != nil {
 		log.Fatal(err)
 	}
 }

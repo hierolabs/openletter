@@ -2,28 +2,33 @@
 
 세 개의 앱으로 구성된 모노 저장소입니다.
 
-| 폴더 | 스택 | 기본 포트 |
+| 폴더 | 스택 | 포트 |
 |---|---|---|
-| `frontend/` | React + Vite + TypeScript | `5173` |
-| `admin/` | React + Vite + TypeScript | `5173` (frontend와 동시에 띄울 경우 자동으로 다음 포트) |
-| `backend/` | Go (`net/http`) | `8080` |
+| `frontend/` | React + Vite + TypeScript | `5180` |
+| `admin/` | React + Vite + TypeScript | `5181` |
+| `backend/` | Go + Gin + GORM (MySQL), Air 핫 리로드 | `8080` |
 
 ## 사전 요구 사항
 
 - **Node.js** 20 이상 (`node --version`)
 - **npm** 10 이상 (`npm --version`)
 - **Go** 1.26 이상 (`go version`)
+- **MySQL** (로컬 또는 원격)
+- **Air** (Go 핫 리로드 도구)
 
-설치되어 있지 않다면:
+설치:
 
 ```bash
 # macOS (Homebrew)
-brew install node go
+brew install node go mysql
+
+# Air 설치
+go install github.com/air-verse/air@latest
 ```
 
-## 최초 1회 설정
+> Air 바이너리는 `$(go env GOPATH)/bin/air`에 설치됩니다. `start.sh`는 이 경로를 직접 참조하므로 `PATH` 설정은 필요 없습니다.
 
-저장소를 클론한 뒤 각 앱의 의존성을 설치합니다.
+## 최초 1회 설정
 
 ```bash
 git clone https://github.com/hierolabs/openletter.git
@@ -35,40 +40,55 @@ cd frontend && npm install && cd ..
 # admin
 cd admin && npm install && cd ..
 
-# backend (go.mod에 의존성이 추가되면 자동 다운로드됨)
-cd backend && go mod tidy && cd ..
+# backend
+cd backend && go mod tidy && cp .env.example .env && cd ..
+# → backend/.env의 DATABASE_DSN을 본인 환경에 맞게 수정
 ```
 
-## 실행
+`backend/.env` 형식:
 
-각 앱은 별도의 터미널에서 실행합니다.
+```env
+PORT=8080
+DATABASE_DSN=user:password@tcp(127.0.0.1:3306)/openletter?charset=utf8mb4&parseTime=True&loc=Local
+```
 
-### Backend (Go)
+## 실행 (전체 한 번에)
 
 ```bash
-cd backend
-go run .
+./start.sh   # 세 서비스를 백그라운드로 시작
+./stop.sh    # 모두 종료
 ```
 
-→ `http://localhost:8080/health` 에서 `ok` 응답 확인
+서비스별 정보:
 
-### Frontend (Vite)
+| 서비스 | URL | 로그 |
+|---|---|---|
+| backend | http://localhost:8080/health | `.run/backend.log` |
+| frontend | http://localhost:5180 | `.run/frontend.log` |
+| admin | http://localhost:5181 | `.run/admin.log` |
+
+로그 실시간 확인:
 
 ```bash
-cd frontend
-npm run dev
+tail -f .run/*.log
 ```
 
-→ `http://localhost:5173`
+PID 파일과 로그는 `.run/` 디렉토리에 저장되며 `.gitignore`로 제외됩니다.
 
-### Admin (Vite)
+## 개별 실행 (선택)
+
+전체 스크립트 대신 개별로 띄우려면:
 
 ```bash
-cd admin
-npm run dev
-```
+# backend (Air 핫 리로드)
+cd backend && air
 
-→ `http://localhost:5173` (frontend와 같이 켜면 Vite가 자동으로 다음 포트 사용, 예: `5174`)
+# frontend
+cd frontend && npm run dev
+
+# admin
+cd admin && npm run dev
+```
 
 ## 빌드
 

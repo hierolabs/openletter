@@ -12,3 +12,6 @@ backend
 # Env
 .env
 .env.local
+
+# Air
+tmp/

@@ -26,6 +26,10 @@ func Open() (*gorm.DB, error) {
 var Models = []any{
 	&model.User{},
 	&model.AdminUser{},
+	&model.Property{},
+	&model.Booking{},
+	&model.Review{},
+	&model.Message{},
 }
 
 func Migrate(db *gorm.DB) error {
